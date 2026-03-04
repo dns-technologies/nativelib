@@ -1,5 +1,11 @@
 # Version History
 
+## 0.2.3.dev0
+
+* Developer release (not public to pip)
+* Fix LowCardinality(FixedString(N)) convert from non-string Data (UUID and other)
+* Fix convert Int/Uint from float and decimal.Decimal data
+
 ## 0.2.2.6
 
 * Change documentation link

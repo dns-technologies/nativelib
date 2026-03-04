@@ -1,3 +1,6 @@
+from decimal import Decimal
+
+
 cpdef Py_ssize_t read_int(
     object fileobj,
     int length,
@@ -24,6 +27,9 @@ cpdef bytes write_int(
 
     if dtype_value is None:
         return bytes(length)
+
+    if dtype_value.__class__ in (float, Decimal):
+        dtype_value = round(dtype_value)
 
     cdef Py_ssize_t int_value = <Py_ssize_t>dtype_value
     return int_value.to_bytes(length, "little", signed=True)
@@ -55,6 +61,9 @@ cpdef bytes write_uint(
 
     if dtype_value is None:
         return bytes(length)
+
+    if dtype_value.__class__ in (float, Decimal):
+        dtype_value = round(dtype_value)
 
     cdef Py_ssize_t int_value = <Py_ssize_t>dtype_value
     return int_value.to_bytes(length, "little", signed=False)

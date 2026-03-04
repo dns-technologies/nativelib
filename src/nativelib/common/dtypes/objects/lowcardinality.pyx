@@ -203,7 +203,7 @@ cdef class LowCardinality:
             dtype_value = self.defaul_value
 
         if self.dtype.name == FIXEDSTRING:
-            dtype_value = dtype_value[:self.dtype.length]
+            dtype_value = str(dtype_value)[:self.dtype.length]
 
         self.index_elements.append(dtype_value)
         self.total_rows += 1
