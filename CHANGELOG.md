@@ -1,5 +1,12 @@
 # Version History
 
+## 0.2.3.dev1
+
+* Developer release (not public to pip)
+* Add support for read and write polars.LazyFrame
+* Add optional param is_lazy to NativeReader.to_polars() method. Default is False
+* Add auto detect polars.LazyFrame to NativeWriter.from_polars() method
+
 ## 0.2.3.dev0
 
 * Developer release (not public to pip)

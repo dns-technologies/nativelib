@@ -5,12 +5,21 @@ from typing import (
 )
 
 from pandas import DataFrame as PdFrame
-from polars import DataFrame as PlFrame
+from polars import (
+    DataFrame as PlFrame,
+    LazyFrame as LfFrame,
+)
 
 from .common import (
     BlockReader,
     pandas_astype,
 )
+
+
+ISLAZY = {
+    False: PlFrame,
+    True: LfFrame,
+}
 
 
 class NativeReader:
@@ -57,10 +66,10 @@ class NativeReader:
             columns=self.block_reader.columns,
         ).astype(pandas_astype(self.block_reader.column_list))
 
-    def to_polars(self) -> PlFrame:
+    def to_polars(self, is_lazy: bool = False) -> PlFrame | LfFrame:
         """Convert to polars.DataFrame."""
 
-        return PlFrame(
+        return ISLAZY[is_lazy](
             self.to_rows(),
             schema=self.block_reader.columns,
             infer_schema_length=None,

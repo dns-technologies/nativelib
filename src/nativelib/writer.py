@@ -2,7 +2,10 @@ from collections.abc import Generator
 from typing import Any, Iterable
 
 from pandas import DataFrame as PdFrame
-from polars import DataFrame as PlFrame
+from polars import (
+    DataFrame as PlFrame,
+    LazyFrame as LfFrame,
+)
 
 from .common import (
     BlockWriter,
@@ -50,9 +53,12 @@ class NativeWriter:
 
     def from_polars(
         self,
-        data_frame: PlFrame,
+        data_frame: PlFrame | LfFrame,
     ) -> Generator[bytes, None, None]:
         """Convert polars.DataFrame to native format."""
+
+        if data_frame.__class__ is LfFrame:
+            data_frame = data_frame.collect(engine="streaming")
 
         return self.from_rows(data_frame.iter_rows())
 
