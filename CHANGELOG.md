@@ -1,5 +1,9 @@
 # Version History
 
+## 0.2.3.dev2
+
+* Speed-up NativeWriter.from_pandas() method
+
 ## 0.2.3.dev1
 
 * Developer release (not public to pip)

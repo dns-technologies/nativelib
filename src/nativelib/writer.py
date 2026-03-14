@@ -49,7 +49,7 @@ class NativeWriter:
     ) -> Generator[bytes, None, None]:
         """Convert pandas.DataFrame to native format."""
 
-        return self.from_rows(iter(data_frame.values))
+        return self.from_rows(data_frame.itertuples(index=False))
 
     def from_polars(
         self,
