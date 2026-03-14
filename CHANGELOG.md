@@ -2,6 +2,7 @@
 
 ## 0.2.3.dev2
 
+* Developer release (not public to pip)
 * Speed-up NativeWriter.from_pandas() method
 
 ## 0.2.3.dev1
