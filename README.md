@@ -84,17 +84,17 @@ and python/pandas.DataFrame/polars.DataFrame.
 From pip
 
 ```bash
-pip install nativelib
+pip install nativelib -U --index-url https://dns-technologies.github.io/dbhose-dev-pip/simple/
 ```
 
 From local directory
 
 ```bash
-pip install .
+pip install . --extra-index-url https://dns-technologies.github.io/dbhose-dev-pip/simple/
 ```
 
 From git
 
 ```bash
-pip install git+https://github.com/0xMihalich/nativelib
+pip install git+https://github.com/dns-technologies/nativelib
 ```

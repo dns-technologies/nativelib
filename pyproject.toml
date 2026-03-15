@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nativelib"
-version = "0.2.3.dev2"
+version = "0.2.3.dev3"
 description = "Library for read and write clickhouse native format."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -28,10 +28,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/0xMihalich/nativelib"
-Documentation = "https://0xmihalich.github.io/dbhose_airflow/base_modules/nativelib/index.html"
-Repository = "https://github.com/0xMihalich/nativelib"
-Changelog = "https://github.com/0xMihalich/nativelib/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/dns-technologies/nativelib"
+Documentation = "https://dns-technologies.github.io/dbhose_airflow/base_modules/nativelib/index.html"
+Repository = "https://github.com/dns-technologies/nativelib"
+Changelog = "https://github.com/dns-technologies/nativelib/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
 packages = {find = {where = ["src"]}}

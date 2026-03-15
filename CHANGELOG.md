@@ -1,5 +1,11 @@
 # Version History
 
+## 0.2.3.dev3
+
+* Developer release (not public to pip)
+* Update README.md
+* Change worker
+
 ## 0.2.3.dev2
 
 * Developer release (not public to pip)
