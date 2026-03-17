@@ -90,7 +90,7 @@ pip install nativelib -U --index-url https://dns-technologies.github.io/dbhose-d
 From local directory
 
 ```bash
-pip install . --extra-index-url https://dns-technologies.github.io/dbhose-dev-pip/simple/
+pip install .
 ```
 
 From git

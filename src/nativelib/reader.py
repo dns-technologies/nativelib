@@ -8,6 +8,7 @@ from pandas import DataFrame as PdFrame
 from polars import (
     DataFrame as PlFrame,
     LazyFrame as LfFrame,
+    Object,
 )
 
 from .common import (
@@ -72,6 +73,15 @@ class NativeReader:
         return ISLAZY[is_lazy](
             self.to_rows(),
             schema=self.block_reader.columns,
+            schema_overrides={
+                col.column: Object
+                for col in self.block_reader.column_list
+                if col.info.is_array and col.info.dtype.name in (
+                    "IPv4",
+                    "IPv6",
+                    "UUID",
+                )
+            },
             infer_schema_length=None,
         )
 

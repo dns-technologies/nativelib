@@ -1,5 +1,11 @@
 # Version History
 
+## 0.2.3.dev4
+
+* Developer release (not public to pip)
+* Update README.md
+* Fix NativeReader.to_polars() for dumps with nested objects
+
 ## 0.2.3.dev3
 
 * Developer release (not public to pip)

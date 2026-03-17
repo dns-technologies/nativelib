@@ -86,7 +86,7 @@ extensions = [
 
 setup(
     name="nativelib",
-    version="0.2.3.dev3",
+    version="0.2.3.dev4",
     package_dir={"": "src"},
     ext_modules=cythonize(extensions, language_level="3"),
     packages=[
