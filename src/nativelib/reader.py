@@ -12,9 +12,10 @@ from polars import (
 )
 
 from .common import (
-    BlockReader,
+    nativelib_repr,
     pandas_astype,
 )
+from .core import BlockReader
 
 
 ISLAZY = {
@@ -93,47 +94,15 @@ class NativeReader:
     def close(self) -> None:
         """Close file object."""
 
-        self.fileobj.close()
+        if hasattr(self.fileobj, "close"):
+            self.fileobj.close()
 
     def __repr__(self) -> str:
-        """String representation in interpreter."""
-
-        return self.__str__()
-
-    def __str__(self) -> str:
         """String representation of NativeReader."""
 
-        def to_col(text: str) -> str:
-            """Format string element."""
-
-            text = text[:14] + "…" if len(text) > 15 else text
-            return f" {text: <15} "
-
-        if not self.block_reader.column_list:
-            self.read_info()
-
-        empty_line = (
-            "├─────────────────┼─────────────────┤"
+        return nativelib_repr(
+            self.block_reader.column_list,
+            self.total_blocks,
+            self.total_rows,
+            "reader",
         )
-        end_line = (
-            "└─────────────────┴─────────────────┘"
-        )
-        _str = [
-            "<Clickhouse Native dump reader>",
-            "┌─────────────────┬─────────────────┐",
-            "│ Column Name     │ Clickhouse Type │",
-            "╞═════════════════╪═════════════════╡",
-        ]
-
-        for column in self.block_reader.column_list:
-            _str.append(
-                f"│{to_col(column.column)}│{to_col(column.dtype.name)}│",
-            )
-            _str.append(empty_line)
-
-        _str[-1] = end_line
-        return "\n".join(_str) + f"""
-Total columns: {self.block_reader.total_columns}
-Total blocks: {self.total_blocks}
-Total rows: {self.total_rows}
-"""

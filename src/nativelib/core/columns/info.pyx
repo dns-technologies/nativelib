@@ -1,8 +1,8 @@
-from nativelib.common.dtypes.objects.array cimport Array
-from nativelib.common.dtypes.objects.dtype cimport DType
-from nativelib.common.dtypes.objects.lowcardinality cimport LowCardinality
-from nativelib.common.dtypes.parse cimport from_dtype
-from nativelib.common.length cimport write_length
+from nativelib.core.parse cimport from_dtype
+from nativelib.core.length cimport write_length
+from nativelib.core.types.objects.array cimport Array
+from nativelib.core.types.objects.dtype cimport DType
+from nativelib.core.types.objects.lowcardinality cimport LowCardinality
 
 
 cdef class ColumnInfo:

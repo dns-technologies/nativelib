@@ -1,6 +1,7 @@
 cdef class Column:
 
     cdef public str column
+    cdef public str string_dtype
     cdef public object fileobj
     cdef public object info
     cdef public object dtype

@@ -7,6 +7,15 @@ from .dtype import DType
 class Array:
     """Clickhouse column array type manipulate."""
 
+    fileobj: BufferedReader
+    dtype: DType | Array
+    name: str
+    is_float: int
+    total_rows: int
+    row_elements: list
+    writable_buffer: list
+    pos: int
+
     def __init__(
         self,
         fileobj: BufferedReader,
@@ -15,14 +24,6 @@ class Array:
     ):
         """Class initialization."""
 
-        self.fileobj: BufferedReader
-        self.dtype: DType | Array
-        self.name: str
-        self.is_float: int
-        self.total_rows: int
-        self.row_elements: list
-        self.writable_buffer: list
-        self.pos: int
         ...
 
     def skip(self) -> None:

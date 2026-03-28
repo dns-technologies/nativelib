@@ -1,4 +1,4 @@
-from nativelib.common.columns.info cimport ColumnInfo
+from nativelib.core.columns.info cimport ColumnInfo
 
 
 cdef class Column:
@@ -14,11 +14,12 @@ cdef class Column:
         """Class initialization."""
 
         self.column = column
+        self.string_dtype = dtype
         self.fileobj = fileobj
         self.info = ColumnInfo(
             total_rows=total_rows,
             column=self.column,
-            dtype=dtype,
+            dtype=self.string_dtype,
         )
         self.dtype = self.info.make_dtype(fileobj=self.fileobj)
         self.data = None

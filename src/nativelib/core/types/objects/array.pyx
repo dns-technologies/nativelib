@@ -1,4 +1,4 @@
-from nativelib.common.dtypes.functions.integers cimport (
+from nativelib.core.types.functions.integers cimport (
     r_uint,
     w_uint,
 )

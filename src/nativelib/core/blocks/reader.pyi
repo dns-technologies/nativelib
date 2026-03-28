@@ -8,17 +8,18 @@ from ..columns import Column
 class BlockReader:
     """Read block from Native format."""
 
+    fileobj: BufferedReader
+    total_columns: int
+    total_rows: int
+    column_list: list[Column]
+    columns: list[str]
+
     def __init__(
         self,
         fileobj: BufferedReader,
     ) -> None:
         """Class initialization."""
 
-        self.fileobj: BufferedReader
-        self.total_columns: int
-        self.total_rows: int
-        self.column_list: list[Column]
-        self.columns: list[str]
         ...
 
     def read_column(self) -> None:

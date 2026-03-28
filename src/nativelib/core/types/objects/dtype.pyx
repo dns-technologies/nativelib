@@ -1,8 +1,8 @@
-from nativelib.common.dtypes.functions.booleans cimport (
+from nativelib.core.length cimport read_length
+from nativelib.core.types.functions.booleans cimport (
     read_bool,
     write_bool,
 )
-from nativelib.common.length cimport read_length
 
 
 cdef class DType:

@@ -13,12 +13,14 @@ P from [39: 76] - Int256
 from libc.math cimport pow
 from decimal import Decimal
 
+from nativelib.core.errors import NativeLibValueError
+
 
 cdef unsigned char find_length(unsigned char precision):
     """Find Decimal lens."""
 
     if precision not in range(1, 77):
-        raise ValueError("precision must be in [1:76] range!")
+        raise NativeLibValueError("precision must be in [1:76] range!")
     if precision <= 9:
         return 4
     if precision <= 18:

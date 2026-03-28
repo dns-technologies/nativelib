@@ -1,4 +1,4 @@
-from nativelib.common.length cimport (
+from nativelib.core.length cimport (
     read_length,
     write_length,
 )

@@ -2,21 +2,17 @@ include CHANGELOG.md
 include README.md
 include LICENSE
 
-include src/nativelib/common/*.pyx
 include src/nativelib/common/*.pyi
-include src/nativelib/common/*.pxd
-recursive-include src/nativelib *.pyx
 recursive-include src/nativelib *.pyi
-recursive-include src/nativelib *.pxd
 
 exclude src/nativelib/common/*.c
+exclude src/nativelib/common/*.pxd
+exclude src/nativelib/common/*.pyx
 recursive-exclude src/nativelib *.c
+recursive-exclude src/nativelib *.pxd
+recursive-exclude src/nativelib *.pyx
 
 exclude *.c
-exclude *.pyd
 exclude src/*.c
-exclude src/*.pyd
 exclude src/**/*.c
-exclude src/**/*.pyd
 global-exclude *.c
-global-exclude *.pyd

@@ -29,7 +29,8 @@ from datetime import (
     datetime,
 )
 
-from nativelib.common.dtypes.functions.integers cimport (
+from nativelib.core.errors import NativeLibValueError
+from nativelib.core.types.functions.integers cimport (
     r_uint,
     w_uint,
 )
@@ -71,7 +72,7 @@ cdef unsigned char find_index_size(unsigned long long total_rows):
     """Detect index size."""
 
     if total_rows < 0:
-        raise ValueError("Non uint value!")
+        raise NativeLibValueError("Non uint value!")
     if total_rows <= 0xff:
         return 1
     if total_rows <= 0xffff:
@@ -100,7 +101,7 @@ cdef bytes generate_header(unsigned char index_size):
             header[8] = key
             return bytes(header)
 
-    raise ValueError(f"Unknown index size {index_size}")
+    raise NativeLibValueError(f"Unknown index size {index_size}")
 
 
 cdef class LowCardinality:

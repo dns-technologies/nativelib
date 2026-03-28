@@ -38,6 +38,18 @@ class LowCardinality:
     Data Type (String, FixedString, Date, DateTime,
     and numbers excepting Decimal)."""
 
+    fileobj: BufferedReader
+    dtype: DType
+    name: str
+    is_float: int
+    is_nullable: bool
+    total_rows: int
+    dictionary: list[Any]
+    index_elements: list[Any]
+    index_size: int
+    defaul_value: object
+    size: int
+
     def __init__(
         self,
         fileobj: BufferedReader,
@@ -47,17 +59,6 @@ class LowCardinality:
     ):
         """Class initialization."""
 
-        self.fileobj: BufferedReader
-        self.dtype: DType
-        self.name: str
-        self.is_float: int
-        self.is_nullable: bool
-        self.total_rows: int
-        self.dictionary: list[Any]
-        self.index_elements: list[Any]
-        self.index_size: int
-        self.defaul_value: object
-        self.size: int
         ...
 
     def __index_size(self) -> None:

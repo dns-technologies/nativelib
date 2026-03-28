@@ -1,14 +1,12 @@
 from ast import literal_eval
-from re import (
-    findall,
-    match,
-)
+from re import compile
 
-from nativelib.common.dtypes.dtype import ClickhouseDtype
+from nativelib.core.errors import NativeLibValueError
+from nativelib.core.types.dtypes import ClickhouseDtype
 
 
-cdef str DTYPE_PATTERN = r"^(\w+)(?:\((.*)\))?$"
-cdef str ENUM_PATTERN = r"'([^']+)'\s*=\s*(-*?\d+)"
+cdef object DTYPE_PATTERN = compile(r"^(\w+)(?:\((.*)\))?$")
+cdef object ENUM_PATTERN = compile(r"'([^']+)'\s*=\s*(-*?\d+)")
 cdef dict DTYPE_LENGTH = {
     "BFloat16": 2,
     "Bool": 1,
@@ -45,7 +43,7 @@ cdef unsigned char find_decimal_length(char precision):
     """Find Decimal lens."""
 
     if precision not in range(1, 77):
-        raise ValueError("precision must be in [1:76] range!")
+        raise NativeLibValueError("precision must be in [1:76] range!")
     if precision <= 9:
         return 4
     if precision <= 18:
@@ -64,7 +62,7 @@ cdef object parse_args(str args):
 cdef object parse_dtype(str dtype):
     """Find datype and args from dtype string."""
 
-    return match(DTYPE_PATTERN, dtype)
+    return DTYPE_PATTERN.match(dtype)
 
 
 cdef dict parse_enum(str args):
@@ -73,7 +71,7 @@ cdef dict parse_enum(str args):
     cdef dict enumcase = {}
     cdef str string, number
 
-    for string, number in findall(ENUM_PATTERN, args):
+    for string, number in ENUM_PATTERN.findall(args):
         enumcase[int(number)] = string
 
     return enumcase
@@ -98,7 +96,7 @@ cdef tuple from_dtype(
     cdef object args_dtype
 
     if not parse:
-        raise ValueError("Fail to parse dtype values!")
+        raise NativeLibValueError("Fail to parse dtype values!")
 
     parent_dtype = parse.group(1)
     args_dtype = parse.group(2)

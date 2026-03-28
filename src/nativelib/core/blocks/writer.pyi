@@ -5,27 +5,28 @@ from typing import (
     Iterator,
 )
 
+from .. import Size
 from ..columns import Column
-from ..defines import DEFAULT_BLOCK_SIZE
 
 
 class BlockWriter:
     """Write block into Native format."""
 
+    column_list: list[Column]
+    max_block_size: int
+    total_columns: int
+    total_rows: int
+    block_size: int
+    headers_size: int
+    data_iterator: Iterator[Any] | None
+
     def __init__(
         self,
         column_list: list[Column],
-        max_block_size: int = DEFAULT_BLOCK_SIZE,
+        max_block_size: int = Size.DEFAULT_BLOCK_SIZE,
     ) -> None:
         """Class initialization."""
 
-        self.column_list: list[Column]
-        self.max_block_size: int
-        self.total_columns: int
-        self.total_rows: int
-        self.block_size: int
-        self.headers_size: int
-        self.data_iterator: Iterator[Any] | None
         ...
 
     def write_row(self) -> None:

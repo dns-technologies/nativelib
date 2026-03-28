@@ -1,5 +1,8 @@
-from collections.abc import Generator
-from typing import Any, Iterable
+from collections.abc import (
+    Generator,
+    Iterable,
+)
+from typing import Any
 
 from pandas import DataFrame as PdFrame
 from polars import (
@@ -7,11 +10,12 @@ from polars import (
     LazyFrame as LfFrame,
 )
 
-from .common import (
+from .core import (
     BlockWriter,
     Column,
-    DEFAULT_BLOCK_SIZE,
+    Size,
 )
+from .common import nativelib_repr
 
 
 class NativeWriter:
@@ -20,7 +24,7 @@ class NativeWriter:
     def __init__(
         self,
         column_list: list[Column],
-        block_size: int = DEFAULT_BLOCK_SIZE,
+        block_size: int = Size.DEFAULT_BLOCK_SIZE,
     ) -> None:
         """Class initialization."""
 
@@ -63,41 +67,11 @@ class NativeWriter:
         return self.from_rows(data_frame.iter_rows())
 
     def __repr__(self) -> str:
-        """String representation in interpreter."""
-
-        return self.__str__()
-
-    def __str__(self) -> str:
         """String representation of NativeWriter."""
 
-        def to_col(text: str) -> str:
-            """Format string element."""
-
-            text = text[:14] + "…" if len(text) > 15 else text
-            return f" {text: <15} "
-
-        empty_line = (
-            "├─────────────────┼─────────────────┤"
+        return nativelib_repr(
+            self.column_list,
+            self.total_blocks,
+            self.total_rows,
+            "writer",
         )
-        end_line = (
-            "└─────────────────┴─────────────────┘"
-        )
-        _str = [
-            "<Clickhouse Native dump writer>",
-            "┌─────────────────┬─────────────────┐",
-            "│ Column Name     │ Clickhouse Type │",
-            "╞═════════════════╪═════════════════╡",
-        ]
-
-        for column in self.column_list:
-            _str.append(
-                f"│{to_col(column.column)}│{to_col(column.dtype.name)}│",
-            )
-            _str.append(empty_line)
-
-        _str[-1] = end_line
-        return "\n".join(_str) + f"""
-Total columns: {len(self.column_list)}
-Total blocks: {self.total_blocks}
-Total rows: {self.total_rows}
-"""

@@ -4,6 +4,8 @@ from struct import (
     unpack,
 )
 
+from nativelib.core.errors import NativeLibValueError
+
 
 cdef dict EnumStructValue = {
     1: "<b",
@@ -51,10 +53,13 @@ cpdef bytes write_enum(
                 enum_key = key
                 break
         else:
-            raise ValueError(f"Enum don't have {dtype_value} value!")
+            raise NativeLibValueError(f"Enum don't have {dtype_value} value!")
     elif dtype_value.__class__ == int:
         enum_key = dtype_value
     else:
-        raise ValueError(f"Enum must be in type int, str or Enum not {dtype_value.__class__}!")
+        raise NativeLibValueError(
+            "Enum must be in type int, str or "
+            f"Enum not {dtype_value.__class__}!",
+        )
 
     return pack(struct_string, enum_key)

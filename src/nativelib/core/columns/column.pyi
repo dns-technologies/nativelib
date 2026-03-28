@@ -4,7 +4,7 @@ from typing import (
     Iterator,
 )
 
-from ..dtypes.objects import (
+from ..types.objects import (
     Array,
     DType,
     LowCardinality,
@@ -15,6 +15,15 @@ from .info import ColumnInfo
 class Column:
     """Column object."""
 
+    column: str
+    string_dtype: str
+    fileobj: BufferedReader | None
+    info: ColumnInfo
+    dtype: Array | DType | LowCardinality
+    data: list[Any] | None
+    iter_data: Iterator[Any] | None
+    pos: int
+
     def __init__(
         self,
         column: str,
@@ -24,13 +33,6 @@ class Column:
     ) -> None:
         """Class initialization."""
 
-        self.column: str
-        self.fileobj: BufferedReader | None
-        self.info: ColumnInfo
-        self.dtype: Array | DType | LowCardinality
-        self.data: list[Any] | None
-        self.iter_data: Iterator[Any] | None
-        self.pos: int
         ...
 
     @property

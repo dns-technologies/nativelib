@@ -19,7 +19,8 @@ except ImportError:
 
 from pandas import Timestamp
 
-from nativelib.common.dtypes.functions.decimals cimport (
+from nativelib.core.errors import NativeLibValueError
+from nativelib.core.types.functions.decimals cimport (
     read_decimal,
     write_decimal,
 )
@@ -195,7 +196,7 @@ cpdef object read_datetime64(
     """Read DateTime64 from Native Format."""
 
     if not 0 <= precision <= 9:
-        raise ValueError("precision must be in [0:9] range!")
+        raise NativeLibValueError("precision must be in [0:9] range!")
 
     cdef bytes seconds_bytes = fileobj.read(8)
     cdef long long seconds = unpack("<q", seconds_bytes)[0]
@@ -223,7 +224,7 @@ cpdef bytes write_datetime64(
         return bytes(8)
 
     if not 0 <= precision <= 9:
-        raise ValueError("precision must be in [0:9] range!")
+        raise NativeLibValueError("precision must be in [0:9] range!")
 
     cdef double seconds = pack_datetime(dtype_value)
     cdef double divider = pow(10, -precision)
@@ -281,7 +282,7 @@ cpdef bytes write_time(
             dtype_value.second
         )
     else:
-        raise ValueError(
+        raise NativeLibValueError(
             "dtype_value must be datetime.time or datetime.timedelta"
         )
 
@@ -359,7 +360,7 @@ cpdef bytes write_time64(
             dtype_value.microsecond / 1_000_000
         )
     else:
-        raise ValueError(
+        raise NativeLibValueError(
             "dtype_value must be datetime.time or datetime.timedelta"
         )
 

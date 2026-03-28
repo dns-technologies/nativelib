@@ -1,5 +1,17 @@
 # Version History
 
+## 0.2.4.dev0
+
+* Developer release (not public to pip)
+* Remove Cython source code from wheel package
+* Decompose project
+* Add NativeLibError and NativeLibValueError classes
+* Add module Size
+* Add Column.string_dtype attribute
+* Add pytest coverage
+* Refactor *.pyi
+* Change NativeReader and NativeWriter `__repr__`() method
+
 ## 0.2.3.dev4
 
 * Developer release (not public to pip)

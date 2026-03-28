@@ -1,6 +1,6 @@
-from nativelib.common.columns.column cimport Column
-from nativelib.common.dtypes.functions.strings cimport read_string
-from nativelib.common.length cimport read_length
+from nativelib.core.length cimport read_length
+from nativelib.core.columns.column cimport Column
+from nativelib.core.types.functions.strings cimport read_string
 
 
 cdef class BlockReader:

@@ -1,5 +1,6 @@
-from nativelib.common.defines import DEFAULT_BLOCK_SIZE
-from nativelib.common.length cimport write_length
+from nativelib.core.length cimport write_length
+from nativelib.core.sizes import DEFAULT_BLOCK_SIZE
+from nativelib.core.errors import NativeLibValueError
 
 
 cdef class BlockWriter:
@@ -29,7 +30,7 @@ cdef class BlockWriter:
         """Write single row."""
 
         if self.data_iterator is None:
-            raise ValueError()
+            raise NativeLibValueError()
 
         cdef object column, dtype_value
 

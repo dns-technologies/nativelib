@@ -1,4 +1,4 @@
-from .columns import Column
+from ..core.columns import Column
 
 
 def pandas_astype(column_list: list[Column]) -> dict[str, str | None]:

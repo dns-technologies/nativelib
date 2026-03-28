@@ -1,4 +1,4 @@
-from .dtype import ClickhouseDtype
+from .types.dtypes import ClickhouseDtype
 
 
 def from_dtype(

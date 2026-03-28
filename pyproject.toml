@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nativelib"
-version = "0.2.3.dev4"
+version = "0.2.4.dev0"
 description = "Library for read and write clickhouse native format."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -38,4 +38,4 @@ packages = {find = {where = ["src"]}}
 package-dir = {"" = "src"}
 
 [tool.setuptools.package-data]
-nativelib = ["**/*.pyx", "**/*.pyi", "**/*.pxd", "*.pyx", "*.pxd", "*.md", "*.txt"]
+nativelib = ["**/*.pyi", "*.md", "*.txt"]
