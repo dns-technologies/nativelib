@@ -21,6 +21,12 @@ from .common import nativelib_repr
 class NativeWriter:
     """Class for write data into native format."""
 
+    column_list: list[Column]
+    block_writer: BlockWriter
+    block_size: int
+    total_blocks: int
+    total_rows: int
+
     def __init__(
         self,
         column_list: list[Column],

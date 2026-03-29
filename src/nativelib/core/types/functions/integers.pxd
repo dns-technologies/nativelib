@@ -1,4 +1,4 @@
-cpdef Py_ssize_t read_int(
+cpdef object read_int(
     object fileobj,
     int length,
     object precision,
@@ -14,7 +14,7 @@ cpdef bytes write_int(
     object tzinfo,
     object enumcase,
 )
-cpdef Py_ssize_t read_uint(
+cpdef object read_uint(
     object fileobj,
     int length,
     object precision=*,

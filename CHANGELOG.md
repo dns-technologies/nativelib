@@ -1,5 +1,12 @@
 # Version History
 
+## 0.2.4.dev1
+
+* Developer release (not public to pip)
+* Improve read and write Into128, Int256, UInt128 and UInt256
+* Refactor NativeReader and NativeWriter parameters detector
+* Add test_writer_all_types to pytest
+
 ## 0.2.4.dev0
 
 * Developer release (not public to pip)

@@ -27,6 +27,11 @@ ISLAZY = {
 class NativeReader:
     """Class for read data from native format."""
 
+    fileobj: BufferedReader
+    block_reader: BlockReader
+    total_blocks: int
+    total_rows: int
+
     def __init__(
         self,
         fileobj: BufferedReader,

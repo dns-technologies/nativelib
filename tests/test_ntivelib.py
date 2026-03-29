@@ -1,5 +1,7 @@
 import datetime
+import decimal
 import io
+import ipaddress
 import uuid
 
 import pytest
@@ -162,6 +164,104 @@ def row_with_arrays():
     )
 
 
+@pytest.fixture
+def all_clickhouse_columns():
+    """Создает список колонок для всех поддерживаемых типов ClickHouse."""
+    return [
+        # Целочисленные типы
+        Column("col_uint8", "UInt8"),
+        Column("col_uint16", "UInt16"),
+        Column("col_uint32", "UInt32"),
+        Column("col_uint64", "UInt64"),
+        Column("col_uint128", "UInt128"),
+        Column("col_uint256", "UInt256"),
+        Column("col_int8", "Int8"),
+        Column("col_int16", "Int16"),
+        Column("col_int32", "Int32"),
+        Column("col_int64", "Int64"),
+        Column("col_int128", "Int128"),
+        Column("col_int256", "Int256"),
+        # Числа с плавающей точкой
+        Column("col_float32", "Float32"),
+        Column("col_float64", "Float64"),
+        Column("col_bfloat16", "BFloat16"),
+        # Decimal
+        Column("col_decimal", "Decimal(10, 2)"),
+        # Строковые типы
+        Column("col_string", "String"),
+        Column("col_fixedstring", "FixedString(10)"),
+        # Дата и время
+        Column("col_date", "Date"),
+        Column("col_date32", "Date32"),
+        Column("col_datetime", "DateTime"),
+        Column("col_datetime64", "DateTime64(3)"),
+        Column("col_time", "Time"),
+        Column("col_time64", "Time64(3)"),
+        # Специальные типы
+        Column("col_enum", "Enum8('one' = 1, 'two' = 2)"),
+        Column("col_bool", "Bool"),
+        Column("col_uuid", "UUID"),
+        Column("col_ipv4", "IPv4"),
+        Column("col_ipv6", "IPv6"),
+        Column("col_array", "Array(UInt8)"),
+        Column("col_low_cardinality", "LowCardinality(String)"),
+        Column("col_nullable", "Nullable(Int32)"),
+        Column("col_nothing", "Nothing"),
+    ]
+
+
+@pytest.fixture
+def all_types_row():
+    """Создает одну тестовую строку со значениями для всех колонок."""
+    return (
+        # Целочисленные типы
+        255,  # UInt8
+        65535,  # UInt16
+        4294967295,  # UInt32
+        18446744073709551615,  # UInt64
+        2**128 - 1,  # UInt128
+        2**256 - 1,  # UInt256
+        -128,  # Int8
+        -32768,  # Int16
+        -2147483648,  # Int32
+        -9223372036854775808,  # Int64
+        2**127 - 1,  # Int128
+        2**255 - 1,  # Int256
+        # Числа с плавающей точкой
+        3.14159,  # Float32
+        3.141592653589793,  # Float64
+        3.125,  # BFloat16
+        # Decimal
+        decimal.Decimal("123456.78"),  # Decimal(10, 2)
+        # Строковые типы
+        "Hello, ClickHouse!",  # String
+        "FixedStr",  # FixedString(10) (будет дополнено нулями)
+        # Дата и время
+        datetime.date(2024, 12, 25),  # Date
+        datetime.date(1900, 1, 1),  # Date32
+        datetime.datetime(2024, 12, 25, 12, 30, 45),  # DateTime
+        datetime.datetime(
+            2024, 12, 25, 12, 30, 45, 123456, tzinfo=datetime.timezone.utc
+        ),  # DateTime64(3)
+        datetime.timedelta(hours=14, minutes=30, seconds=0),  # Time
+        datetime.timedelta(
+            hours=23, minutes=59, seconds=59, microseconds=123000
+        ),  # Time64(3) (миллисекунды)
+        # Специальные типы
+        "one",  # Enum8 (значение должно соответствовать определению)
+        True,  # Bool
+        uuid.uuid4(),  # UUID
+        ipaddress.IPv4Address("192.168.1.1"),  # IPv4
+        ipaddress.IPv6Address(
+            "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
+        ),  # IPv6
+        [1, 2, 3, 4, 5],  # Array(UInt8)
+        "LowCardinalityString",  # LowCardinality(String)
+        12345,  # Nullable(Int32)
+        None,  # Nothing
+    )
+
+
 class TestNativeWriter:
     """Тесты для NativeWriter."""
 
@@ -220,6 +320,78 @@ class TestNativeWriter:
         assert "<Clickhouse Native dump writer>" in repr_str  # noqa: S101
         assert "Total blocks: 0" in repr_str  # noqa: S101
         assert "Total rows: 0" in repr_str  # noqa: S101
+
+    def test_writer_all_types(self, all_clickhouse_columns, all_types_row):
+        """Тест записи и чтения всех поддерживаемых типов ClickHouse."""
+
+        output = io.BytesIO()
+        writer = NativeWriter(all_clickhouse_columns)
+        writer.from_rows([all_types_row])
+        blocks = list(writer.from_rows([all_types_row]))
+
+        for block in blocks:
+            output.write(block)
+
+        output.seek(0)
+        reader = NativeReader(output)
+        rows = list(reader.to_rows())
+        assert len(rows) == 1  # noqa: S101
+        read_row = rows[0]
+        # Проверяем целочисленные типы
+        assert read_row[0] == 255  # noqa: S101
+        assert read_row[1] == 65535  # noqa: S101
+        assert read_row[2] == 4294967295  # noqa: S101
+        assert read_row[3] == 18446744073709551615  # noqa: S101
+        assert read_row[4] == 2**128 - 1  # noqa: S101
+        assert read_row[5] == 2**256 - 1  # noqa: S101
+        assert read_row[6] == -128  # noqa: S101
+        assert read_row[7] == -32768  # noqa: S101
+        assert read_row[8] == -2147483648  # noqa: S101
+        assert read_row[9] == -9223372036854775808  # noqa: S101
+        assert read_row[10] == 2**127 - 1  # noqa: S101
+        assert read_row[11] == 2**255 - 1  # noqa: S101
+        # Проверяем числа с плавающей точкой
+        # Float32 и BFloat16 имеют ограниченную точность
+        assert abs(read_row[12] - 3.14159) < 0.0001  # noqa: S101
+        assert abs(read_row[13] - 3.141592653589793) < 0.0001  # noqa: S101
+        assert read_row[14] == 3.125  # noqa: S101
+        # Проверяем Decimal
+        assert read_row[15] == decimal.Decimal("123456.78")  # noqa: S101
+        # Проверяем строковые типы
+        assert read_row[16] == "Hello, ClickHouse!"  # String  # noqa: S101
+        # FixedString(10) возвращается как str
+        assert isinstance(read_row[17], str)  # FixedString(N)  # noqa: S101
+        assert (  # noqa: S101
+            read_row[17] == "FixedStr\x00\x00"
+        )  # Исходное значение без нулевых байтов в конце
+        # Проверяем дату и время
+        assert read_row[18] == datetime.date(2024, 12, 25)  # noqa: S101
+        assert read_row[19] == datetime.date(1900, 1, 1)  # noqa: S101
+        assert read_row[20] == datetime.datetime(  # noqa: S101
+            2024, 12, 25, 12, 30, 45, tzinfo=datetime.timezone.utc
+        )
+        # DateTime64: проверяем, что значение округлено до 3 миллисекунд
+        expected_datetime = datetime.datetime(
+            2024, 12, 25, 12, 30, 45, 123000, tzinfo=datetime.timezone.utc
+        )
+        assert read_row[21] == expected_datetime  # noqa: S101
+        # Time и Time64 возвращаются как timedelta
+        assert read_row[22] == datetime.timedelta(hours=14, minutes=30)  # noqa: S101
+        assert read_row[23] == datetime.timedelta(  # noqa: S101
+            hours=23, minutes=59, seconds=59, microseconds=123000
+        )
+        # Проверяем специальные типы
+        assert read_row[24] == "one"  # Enum  # noqa: S101
+        assert read_row[25] is True  # Bool  # noqa: S101
+        assert isinstance(read_row[26], uuid.UUID)  # UUID  # noqa: S101
+        assert read_row[27] == ipaddress.IPv4Address("192.168.1.1")  # IPv4  # noqa: E501, S101
+        assert read_row[28] == ipaddress.IPv6Address(  # noqa: S101
+            "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
+        )  # IPv6
+        assert read_row[29] == [1, 2, 3, 4, 5]  # Array(UInt8)  # noqa: S101
+        assert read_row[30] == "LowCardinalityString"  # LowCardinality(String)  # noqa: E501, S101
+        assert read_row[31] == 12345  # Nullable(Int32)  # noqa: S101
+        assert read_row[32] is None  # Nothing  # noqa: S101
 
 
 class TestNativeReader:
