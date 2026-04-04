@@ -56,6 +56,7 @@ cdef class BlockReader:
             )
             column_obj.skip()
             self.column_list.append(column_obj)
+            self.columns.append(column_obj.column)
 
         return self.total_rows
 

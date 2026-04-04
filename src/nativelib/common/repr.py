@@ -1,5 +1,3 @@
-from ..core.columns import Column
-
 EMPTY_LINE = "├─────────────────┼─────────────────┤"
 END_LINE = "└─────────────────┴─────────────────┘"
 HEADER_LINES = [
@@ -43,20 +41,22 @@ def table_repr(
 
 
 def nativelib_repr(
-    column_list: list[Column],
-    total_blocks: int,
-    total_rows: int,
+    columns: list[str],
+    dtypes: list[str],
+    num_columns: int,
+    num_rows: int,
+    num_blocks: int,
     object_type: str,
 ) -> str:
     """Generate string representation for NativeReader/NativeWriter."""
 
     return table_repr(
-        [column.column for column in column_list],
-        [column.string_dtype for column in column_list],
+        columns,
+        dtypes,
         f"<Clickhouse Native dump {object_type}>",
         [
-            f"Total columns: {len(column_list)}",
-            f"Total blocks: {total_blocks}",
-            f"Total rows: {total_rows}",
+            f"Total columns: {num_columns}",
+            f"Total rows: {num_rows}",
+            f"Total blocks: {num_blocks}",
         ],
     )

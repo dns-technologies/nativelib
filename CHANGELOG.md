@@ -1,5 +1,15 @@
 # Version History
 
+## 0.2.5.dev0
+
+* Developer release (not public to pip)
+* Improve nativelib_repr() function
+* NativeReader now ReaderType protocol compatible
+* NativeWriter now ReaderType protocol compatible
+* Fix BlockReader.skip() method
+* Update pytest
+* Update README.md
+
 ## 0.2.4.dev1
 
 * Developer release (not public to pip)
