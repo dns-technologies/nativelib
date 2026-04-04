@@ -164,7 +164,6 @@ df = lf.collect()
 ```python
 import pandas as pd
 import datetime
-import uuid
 
 df = pd.DataFrame({
     "id": [1, 2, 3],
