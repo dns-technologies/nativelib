@@ -74,9 +74,26 @@ cdef class Array:
 
     cpdef bytes clear(self):
         """Get column data and clean buffers."""
+        
+        cdef bytearray data_buffer = bytearray()
+        cdef bytes buf
 
-        cdef bytes data_bytes = b"".join(self.writable_buffer)
+        for buf in self.writable_buffer:
+            data_buffer.extend(buf)
+
+        data_buffer.extend(self.dtype.clear())
         self.total_rows = 0
         self.row_elements.clear()
         self.writable_buffer.clear()
-        return data_bytes + self.dtype.clear()
+        return bytes(data_buffer)
+
+    cpdef bytes to_bytes(self):
+        """Read dtype bytes."""
+
+        cdef bytearray bytes_data = bytearray()
+
+        bytes_data.extend(self.fileobj.read(8 * (self.total_rows - 1)))
+        self.dtype.total_rows = r_uint(self.fileobj, 8)
+        bytes_data.extend(w_uint(self.dtype.total_rows, 8))
+        bytes_data.extend(self.dtype.to_bytes())
+        return bytes(bytes_data)

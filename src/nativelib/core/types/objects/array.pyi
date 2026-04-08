@@ -50,3 +50,8 @@ class Array:
         """Get column data and clean buffers."""
 
         ...
+
+    def to_bytes(self):
+        """Read dtype bytes."""
+
+        ...

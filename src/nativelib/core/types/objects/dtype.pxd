@@ -23,3 +23,4 @@ cdef class DType:
     cpdef unsigned long long write(self, object dtype_values)
     cpdef unsigned long long tell(self)
     cpdef bytes clear(self)
+    cpdef bytes to_bytes(self)

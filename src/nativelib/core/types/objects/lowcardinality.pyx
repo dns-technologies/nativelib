@@ -225,36 +225,32 @@ cdef class LowCardinality:
     cpdef bytes clear(self):
         """Get column data and clean buffers."""
 
-        cdef list buffer_bytes = []
+        cdef bytearray buffer_bytes = bytearray()
         cdef bytes buffer_element
         cdef object dict_element, index_element
 
         self.__update_index_size()
-
         buffer_element = generate_header(self.index_size)
-        buffer_bytes.append(buffer_element)
-
+        buffer_bytes.extend(buffer_element)
         self.dtype.clear()
         self.dictionary = [self.dictionary[0], *sorted(self.dictionary[1:])]
-
         buffer_element = w_uint(len(self.dictionary), 8)
-        buffer_bytes.append(buffer_element)
+        buffer_bytes.extend(buffer_element)
 
         for dict_element in self.dictionary:
             self.dtype.write(dict_element)
 
         buffer_element = self.dtype.clear()
-        buffer_bytes.append(buffer_element)
-
+        buffer_bytes.extend(buffer_element)
         buffer_element = w_uint(self.total_rows, 8)
-        buffer_bytes.append(buffer_element)
+        buffer_bytes.extend(buffer_element)
 
         for index_element in self.index_elements:
             buffer_element = w_uint(
                 self.dictionary.index(index_element),
                 self.index_size,
             )
-            buffer_bytes.append(buffer_element)
+            buffer_bytes.extend(buffer_element)
 
         self.dictionary.clear()
         self.index_elements.clear()
@@ -262,4 +258,17 @@ cdef class LowCardinality:
         self.dtype.total_rows = 0
         self.index_size = 1
         self.size = 0
-        return b"".join(buffer_bytes)
+        return bytes(buffer_bytes)
+
+    cpdef bytes to_bytes(self):
+        """Read dtype bytes."""
+
+        cdef bytearray bytes_data = bytearray()
+
+        self.__index_size()
+        bytes_data.extend(generate_header(self.index_size))
+        bytes_data.extend(self.dtype.to_bytes())
+        self.total_rows = r_uint(self.fileobj, 8)
+        bytes_data.extend(w_uint(self.total_rows, 8))
+        bytes_data.extend(self.fileobj.read(self.index_size * self.total_rows))
+        return bytes(bytes_data)

@@ -79,3 +79,12 @@ cdef class Column:
         cdef list bytes_buffer = [self.info.header]
         bytes_buffer.append(self.dtype.clear())
         return b"".join(bytes_buffer)
+
+    cpdef bytes to_bytes(self):
+        """Read column as bytes."""
+
+        cdef bytearray bytes_data = bytearray()
+
+        bytes_data.extend(self.info.header)
+        bytes_data.extend(self.dtype.to_bytes())
+        return bytes(bytes_data)

@@ -75,3 +75,8 @@ class Column:
         """Get column data and clean."""
 
         ...
+
+    def to_bytes(self):
+        """Read dtype bytes."""
+
+        ...

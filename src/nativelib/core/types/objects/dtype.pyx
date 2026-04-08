@@ -1,4 +1,7 @@
-from nativelib.core.length cimport read_length
+from nativelib.core.length cimport (
+    read_length,
+    write_length,
+)
 from nativelib.core.types.functions.booleans cimport (
     read_bool,
     write_bool,
@@ -130,11 +133,37 @@ cdef class DType:
     cpdef bytes clear(self):
         """Get column data and clean buffers."""
 
-        cdef bytes data_bytes
-        self.nullable_buffer.extend(self.writable_buffer)
-        data_bytes = b"".join(self.nullable_buffer)
+        cdef bytearray data_buffer = bytearray()
+        cdef bytes buf
+
+        for buf in self.nullable_buffer:
+            data_buffer.extend(buf)
+
+        for buf in self.writable_buffer:
+            data_buffer.extend(buf)
+
         self.nullable_buffer.clear()
         self.writable_buffer.clear()
         self.total_rows = 0
         self.pos = 0
-        return data_bytes
+        return bytes(data_buffer)
+
+    cpdef bytes to_bytes(self):
+        """Read dtype bytes."""
+
+        cdef int _, length, total_length
+        cdef bytearray bytes_data = bytearray()
+
+        if self.is_nullable:
+            bytes_data.extend(self.fileobj.read(self.total_rows))
+
+        if self.length is None:
+            for _ in range(self.total_rows):
+                length = read_length(self.fileobj)
+                bytes_data.extend(write_length(length))
+                bytes_data.extend(self.fileobj.read(length))
+        else:
+            total_length = self.length * self.total_rows
+            bytes_data.extend(self.fileobj.read(total_length))
+
+        return bytes(bytes_data)

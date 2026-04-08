@@ -1,5 +1,12 @@
 # Version History
 
+## 0.2.5.dev1
+
+* Developer release (not public to pip)
+* Add to_read() method into Column, DType, Array and LowCardinality objects
+* Refactor write methods
+* Speed-up write operations
+
 ## 0.2.5.dev0
 
 * Developer release (not public to pip)
