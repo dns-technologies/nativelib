@@ -80,11 +80,13 @@ cdef class Column:
         bytes_buffer.append(self.dtype.clear())
         return b"".join(bytes_buffer)
 
-    cpdef bytes to_bytes(self):
+    cpdef bytes to_bytes(self, object with_header=True):
         """Read column as bytes."""
 
         cdef bytearray bytes_data = bytearray()
 
-        bytes_data.extend(self.info.header)
+        if with_header is True:
+            bytes_data.extend(self.info.header)
+
         bytes_data.extend(self.dtype.to_bytes())
         return bytes(bytes_data)

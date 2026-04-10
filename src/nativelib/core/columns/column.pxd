@@ -14,4 +14,4 @@ cdef class Column:
     cpdef unsigned long long write(self, object data)
     cpdef unsigned long long tell(self)
     cpdef bytes clear(self)
-    cpdef bytes to_bytes(self)
+    cpdef bytes to_bytes(self, object with_header=*)

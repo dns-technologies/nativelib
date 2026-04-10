@@ -91,6 +91,14 @@ class NativeReader:
         except IndexError:
             """End of file."""
 
+    def read_block(self) -> tuple[Any, ...]:
+        """Read single block as python values."""
+
+        rows = tuple(self.block_reader.read())
+        self.num_rows += len(rows)
+        self.num_blocks += 1
+        return rows
+
     def to_rows(self) -> Generator[Any, None, None]:
         """Convert to python rows."""
 
