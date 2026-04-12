@@ -267,6 +267,7 @@ cdef class LowCardinality:
 
         self.__index_size()
         bytes_data.extend(generate_header(self.index_size))
+        bytes_data.extend(w_uint(self.dtype.total_rows, 8))
         bytes_data.extend(self.dtype.to_bytes())
         self.total_rows = r_uint(self.fileobj, 8)
         bytes_data.extend(w_uint(self.total_rows, 8))

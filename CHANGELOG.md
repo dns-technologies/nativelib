@@ -6,6 +6,7 @@
 * Add optional atribute with_header into Column.to_bytes() method. Default is True
 * Add NativeReader.read_block() method. This method will return python values as tuple object
 * Improve BlockReader.skip() method
+* Improve LowCardinality.to_bytes() method
 
 ## 0.2.5.dev1
 
