@@ -44,6 +44,7 @@ cdef class BlockReader:
         self.total_columns = read_length(self.fileobj)
         self.total_rows = read_length(self.fileobj)
         self.column_list.clear()
+        self.columns.clear()
 
         for _i in range(self.total_columns):
             column = read_string(self.fileobj)
