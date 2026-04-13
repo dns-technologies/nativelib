@@ -9,3 +9,4 @@ cdef class BlockReader:
     cdef void read_column(self)
     cpdef unsigned long long skip(self)
     cpdef object read(self)
+    cpdef bytes to_bytes(self, object with_header=*)

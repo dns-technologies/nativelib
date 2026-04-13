@@ -36,3 +36,8 @@ class BlockReader:
         """Read block into python rows."""
 
         ...
+
+    def to_bytes(self, with_header: bool = True) -> bytes:
+        """Read block as bytes."""
+
+        ...

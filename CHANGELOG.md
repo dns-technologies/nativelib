@@ -1,5 +1,14 @@
 # Version History
 
+## 0.2.5.dev3
+
+* Developer release (not public to pip)
+* Add BlockReader.to_bytes() method
+* Fix docstrings
+* Improve NativeReader.to_bytes() method. Now method return data as blocks
+* Improve NativeReader.columns
+* Improve NativeReader.dtypes
+
 ## 0.2.5.dev2
 
 * Developer release (not public to pip)

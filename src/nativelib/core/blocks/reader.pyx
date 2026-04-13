@@ -1,4 +1,7 @@
-from nativelib.core.length cimport read_length
+from nativelib.core.length cimport (
+    read_length,
+    write_length,
+)
 from nativelib.core.columns.column cimport Column
 from nativelib.core.types.functions.strings cimport read_string
 
@@ -75,3 +78,32 @@ cdef class BlockReader:
             self.read_column()
 
         return zip(*self.column_list)
+
+    cpdef bytes to_bytes(self, object with_header=True):
+        """Read column as bytes."""
+
+        cdef int _i
+        cdef str column, dtype
+        cdef bytearray block = bytearray()
+
+        self.total_columns = read_length(self.fileobj)
+        block.extend(write_length(self.total_columns))
+        self.total_rows = read_length(self.fileobj)
+        block.extend(write_length(self.total_rows))
+        self.column_list.clear()
+        self.columns.clear()
+
+        for _i in range(self.total_columns):
+            column = read_string(self.fileobj)
+            dtype = read_string(self.fileobj)
+            column_obj = Column(
+                fileobj=self.fileobj,
+                total_rows=self.total_rows,
+                column=column,
+                dtype=dtype,
+            )
+            block.extend(column_obj.to_bytes())
+            self.column_list.append(column_obj)
+            self.columns.append(column_obj.column)
+
+        return bytes(block)

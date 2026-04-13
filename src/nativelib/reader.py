@@ -15,10 +15,7 @@ from .common import (
     nativelib_repr,
     pandas_astype,
 )
-from .core import (
-    BlockReader,
-    Size,
-)
+from .core import BlockReader
 
 
 ISLAZY = {
@@ -34,6 +31,8 @@ class NativeReader:
     block_reader: BlockReader
     num_blocks: int
     num_rows: int
+    _columns: list[str] | None
+    _dtypes: list[str] | None
     _metadata: list[dict[str, str]]
 
     def __init__(
@@ -46,22 +45,30 @@ class NativeReader:
         self.block_reader = BlockReader(self.fileobj)
         self.num_blocks = 0
         self.num_rows = 0
+        self._columns = None
+        self._dtypes = None
         self._metadata = []
 
     @property
     def columns(self) -> list[str]:
         """Get column names."""
 
-        return self.block_reader.columns
+        if not self._columns:
+            self._columns = self.block_reader.columns
+
+        return self._columns
 
     @property
     def dtypes(self) -> list[str]:
         """Get column data types."""
 
-        return [
-            column.string_dtype
-            for column in self.block_reader.column_list
-        ]
+        if not self._dtypes:
+            self._dtypes = [
+                column.string_dtype
+                for column in self.block_reader.column_list
+            ]
+
+        return self._dtypes
 
     @property
     def num_columns(self) -> int:
@@ -138,10 +145,15 @@ class NativeReader:
         )
 
     def to_bytes(self) -> Generator[bytes, None, None]:
-        """Get raw unpacked csv data as bytes."""
+        """Get raw unpacked data for block as bytes."""
 
-        while chunk := self.fileobj.read(Size.DEFAULT_BLOCK_SIZE):
-            yield chunk
+        try:
+            while block := self.block_reader.to_bytes():
+                yield block
+                self.num_rows += self.block_reader.total_rows
+                self.num_blocks += 1
+        except IndexError:
+            """End of file."""
 
     def tell(self) -> int:
         """Return current position."""

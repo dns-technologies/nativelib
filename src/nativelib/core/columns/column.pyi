@@ -77,6 +77,6 @@ class Column:
         ...
 
     def to_bytes(self, with_header: bool = True) -> bytes:
-        """Read dtype bytes."""
+        """Read column as bytes."""
 
         ...
