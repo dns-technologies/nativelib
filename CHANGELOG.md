@@ -1,5 +1,12 @@
 # Version History
 
+## 0.2.5.dev4
+
+* Developer release (not public to pip)
+* Add build wheels for manylinux aarch64
+* Update build_wheels.yml
+* Update MANIFEST.in
+
 ## 0.2.5.dev3
 
 * Developer release (not public to pip)

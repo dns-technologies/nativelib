@@ -3,7 +3,9 @@ include README.md
 include LICENSE
 
 include src/nativelib/common/*.pyi
+include src/nativelib/common/*.pyd
 recursive-include src/nativelib *.pyi
+recursive-include src/nativelib *.pyd
 
 exclude src/nativelib/common/*.c
 exclude src/nativelib/common/*.pxd
